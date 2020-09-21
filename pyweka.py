@@ -37,8 +37,8 @@ loader = Loader(classname="weka.core.converters.ArffLoader")
 data = loader.load_file(data_dir + arff_file)
 data.class_is_last()
 
-filename_array = ["NumberOfTrees", "RandomFeatures", "DepthOfTrees", "MinimumObjectByLeaf", "RandomSubSpace", "InfoGainAttributeEval", "PrincipalComponents", "GainRatioAttributeEval"]
-filename = str(filename_array[2])
+filename_array = ["NumberOfTrees", "RandomFeatures", "DepthOfTrees", "MinimumObjectByLeaf", "RandomSubSpace", "InfoGainAttributeEval", "PrincipalComponents", "GainRatioAttributeEval", "WrapperSubsetEval", "CorrelationAttributeEval"]
+filename = str(filename_array[9])
 filename_index = filename_array.index(filename)
 
 cmdline = []
@@ -77,6 +77,12 @@ cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.att
 
 # Attribute selection algorithm - GainRatioAttributeEval
 cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.GainRatioAttributeEval \" -S \"weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees 1000 -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
+
+# Attribute selection algorithm - WeapperSubsetEval
+cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.WrapperSubsetEval -B weka.classifiers.trees.PBC4cip -F 5 -T 0.01 -R 1 -E DEFAULT -- -S 1 -miner \\\"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\\\\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\\\\\\\\\" -maxDepth -1 \\\\\\\\\\\\\\\"-minimalObjByLeaf \\\\\\\\\\\\\\\" 2 -minimalSplitGain 1.0E-30\\\\\\\"\\\"\" -S \"weka.attributeSelection.BestFirst -D 1 -N 5\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
+
+# Attribute selection algorithm - CorrelationAttributeEval
+cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.CorrelationAttributeEval \" -S \"weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
 
 input_config = cmdline[filename_index]
 classifier = from_commandline(input_config, classname="weka.classifiers.Classifier")
@@ -133,7 +139,7 @@ df.to_csv(f"{filename}.csv", index=False)
     
 
 with tqdm(total=len(big_string), file=sys.stdout) as pbar:
-    with open(f'D:/GoogleDrive/ITESM/3rd Semester/Tecnicas de ML/Assignment 3/{filename}.txt', 'w') as f:
+    with open(f'{filename}.txt', 'w') as f:
         print("input: " + input_config, file=f)
         print("output: " + classifier.to_commandline(), file=f)
         print("model:\n", file=f)
