@@ -13,19 +13,22 @@ import time
 import pandas as pd
 
 start_time = time.time()
-jvm.start(packages=True, max_heap_size="12g") #max_heap_size 512m, 4g. packages=true searches for weka packages in installation program
-#pkg = "PBC4cip"
+#jvm.start(packages=True, max_heap_size="12g") #max_heap_size 512m, 4g. packages=true searches for weka packages in installation program
+jvm.start(packages='C:/Users/rolan/wekafiles', max_heap_size='12g')
 
+pkg = "PBC4cip"
+pkg_source = 'D:/GoogleDrive/ITESM/3rd Semester/Tecnicas de ML/Assignment 3/PBC4cip-1.0-weka.zip'
+print(complete_classname("." + pkg))
 # install package if necessary 
-#if not packages.is_installed(pkg):1.0E 
-#    print("Installing %s..." % pkg)
-#    packages.install_package(pkg)
-#    print("Installed %s, please re-run script!" % pkg)
-#    jvm.stop()
-#    sys.exit(0)
+if not packages.is_installed(pkg):
+    print("Installing %s..." % pkg)
+    #packages.install_package("http://prdownloads.sourceforge.net/weka/discriminantAnalysis1.0.3.zip?download")
+    packages.install_package(pkg_source)
+    print("Installed %s, please re-run script!" % pkg)
+    jvm.stop()
+    sys.exit(0)
 
 # testing classname completion
-#print(complete_classname(".PBC4cip"))
 
 print("\n\n\n\n\n")
 print(">>> Start...")
@@ -70,19 +73,19 @@ randomSubSpace = randomSubSpace_array[0]
 cmdline.append(f'weka.classifiers.meta.RandomSubSpace -P {randomSubSpace} -S 1 -num-slots 1 -I 10 -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
 
 # Attribute selection algorithm - InfoGainAttributeEval
-cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.InfoGainAttributeEval \" -S \"weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees 1000 -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
+cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.InfoGainAttributeEval \" -S \"weka.attributeSelection.Ranker -T 0.1 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
 
 # Attribute selection algorithm - PrincipalComponents
 cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.PrincipalComponents -R 0.95 -A 5\" -S \"weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees 1000 -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
 
 # Attribute selection algorithm - GainRatioAttributeEval
-cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.GainRatioAttributeEval \" -S \"weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees 1000 -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
+cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.GainRatioAttributeEval \" -S \"weka.attributeSelection.Ranker -T 0.1 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
 
 # Attribute selection algorithm - WeapperSubsetEval
 cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.WrapperSubsetEval -B weka.classifiers.trees.PBC4cip -F 5 -T 0.01 -R 1 -E DEFAULT -- -S 1 -miner \\\"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\\\\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\\\\\\\\\" -maxDepth -1 \\\\\\\\\\\\\\\"-minimalObjByLeaf \\\\\\\\\\\\\\\" 2 -minimalSplitGain 1.0E-30\\\\\\\"\\\"\" -S \"weka.attributeSelection.BestFirst -D 1 -N 5\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
 
 # Attribute selection algorithm - CorrelationAttributeEval
-cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.CorrelationAttributeEval \" -S \"weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
+cmdline.append(f'weka.classifiers.meta.AttributeSelectedClassifier -E \"weka.attributeSelection.CorrelationAttributeEval \" -S \"weka.attributeSelection.Ranker -T 0.1 -N -1\" -W weka.classifiers.trees.PBC4cip -- -S 1 -miner \"PRFramework.Core.SupervisedClassifiers.EmergingPatterns.Miners.RandomForestMinerWithoutFiltering -bagSizePercent 100 -numFeatures -1 -numTrees {trees} -builder \\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.Builder.DecisionTreeBuilder -distributionEvaluator \\\\\\\"PRFramework.Core.SupervisedClassifiers.DecisionTrees.DistributionEvaluators.QuinlanGain \\\\\\\" -maxDepth -1 \\\\\\\"-minimalObjByLeaf \\\\\\\" 2 -minimalSplitGain 1.0E-30\\\"\"')
 
 input_config = cmdline[filename_index]
 classifier = from_commandline(input_config, classname="weka.classifiers.Classifier")
