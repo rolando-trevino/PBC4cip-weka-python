@@ -1,0 +1,9 @@
+**/.ipynb_checkpoints
+*.arff
+*.csv
+*.xlsx
+*.pdf
+**/recicle bin
+*.model
+*.txt
+*.zip
